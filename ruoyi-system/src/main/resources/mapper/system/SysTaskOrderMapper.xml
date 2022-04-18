@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysTaskOrderMapper">
+    
+    <resultMap type="SysTaskOrder" id="SysTaskOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="taskNum"    column="task_num"    />
+        <result property="category"    column="category"    />
+        <result property="peers"    column="peers"    />
+        <result property="account"    column="account"    />
+        <result property="orderDate"    column="order_date"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectSysTaskOrderVo">
+        select id, order_id, task_num, category, peers, account, order_date, status from sys_task_order
+    </sql>
+
+    <select id="selectSysTaskOrderList" parameterType="SysTaskOrder" resultMap="SysTaskOrderResult">
+        <include refid="selectSysTaskOrderVo"/>
+        <where>  
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="peers != null  and peers != ''"> and peers = #{peers}</if>
+            <if test="account != null  and account != ''"> and account = #{account}</if>
+            <if test="orderDate != null "> and order_date = #{orderDate}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysTaskOrderById" parameterType="Long" resultMap="SysTaskOrderResult">
+        <include refid="selectSysTaskOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysTaskOrder" parameterType="SysTaskOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_task_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="taskNum != null">task_num,</if>
+            <if test="category != null">category,</if>
+            <if test="peers != null">peers,</if>
+            <if test="account != null">account,</if>
+            <if test="orderDate != null">order_date,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="taskNum != null">#{taskNum},</if>
+            <if test="category != null">#{category},</if>
+            <if test="peers != null">#{peers},</if>
+            <if test="account != null">#{account},</if>
+            <if test="orderDate != null">#{orderDate},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysTaskOrder" parameterType="SysTaskOrder">
+        update sys_task_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="taskNum != null">task_num = #{taskNum},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="peers != null">peers = #{peers},</if>
+            <if test="account != null">account = #{account},</if>
+            <if test="orderDate != null">order_date = #{orderDate},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysTaskOrderById" parameterType="Long">
+        delete from sys_task_order where id = #{id}
+    </delete>
+
+    <delete id="deleteSysTaskOrderByIds" parameterType="String">
+        delete from sys_task_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
